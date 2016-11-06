@@ -8,8 +8,20 @@
     height: 100%;
     overflow: hidden;
 }
-.home {
+.bgdegrade {
   background:url(../img/123.jpg) repeat-y 0 0;
   position:inherit;
   overflow: auto;
+}
+
+.active {
+  border-color: #e42112 !important;
+  background-color: #ef473a !important;
+  color: #fff !important;
+}
+
+.bar-subheader {
+  background-color: #ef473a;
+  color: white;
+  margin-bottom: 1rem;
 }

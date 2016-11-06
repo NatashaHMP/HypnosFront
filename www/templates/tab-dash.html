@@ -1,4 +1,4 @@
-<ion-view view-title="HYPSON">
+<ion-view view-title="HYPSON" class="bgdegrade">
 
   <ion-content class="padding">
 
@@ -15,8 +15,10 @@
 <br>
 
 <ds-widget-clock start-time="startTimeValue"></ds-widget-clock><br>
-<a class="button icon-right ion-chevron-right button-calm">Start</a>
+
+<a class="button icon-right ion-chevron-right button-calm" ng-class="{'active': isActive}" ng-click="activeButton()" >{{stats}}</a>
 </div>
+
   </ion-content>
 
 </ion-view>
