@@ -1,6 +1,20 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {
+.controller('DashCtrl', function($scope, $http) {
+
+  $scope.getData = function() {
+    $http({
+      method: 'GET',
+      url: "http://hypnosbluehack.mybluemix.net/test/?text=Breathing%20pauses;%20Awakenings%20from%20sleep;%20Morning%20headache",
+    }).then(function(data){
+      console.log(data);
+      return data;
+    }, function(response) {
+      alert("error", response);
+    });
+  };
+
+  $scope.getData();
 
   $scope.isActive = false;
   $scope.stats = 'Start';
@@ -13,7 +27,8 @@ angular.module('starter.controllers', [])
     else {
       $scope.stats = 'Start';
     }
-  } ;
+  };
+
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
