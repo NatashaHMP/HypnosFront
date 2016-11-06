@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Title</title>
+<script src="canvasjs.js" type="text/javascript"></script>
+<style type="text/css">
+#chart {
+	width: 500px;
+	height: 200px;
+}
+</style>
+</head>
+<body style="
+    width: 720px;
+    height: 500px;
+">
+<audio id="audioElement" src="apnea.mp3"></audio>
+<div id="chart" style="
+    width: 720px;
+    height: 500px;
+"><div class="canvasjs-chart-container" style="position: relative; text-align: left; cursor: auto;"><canvas class="canvasjs-chart-canvas" width="700" height="500" style="position: absolute;"></canvas><canvas class="canvasjs-chart-canvas" width="700" height="500" style="position: absolute;"></canvas><div class="canvasjs-chart-toolbar" style="position: absolute; right: 1px; top: 1px;"></div><div class="canvasjs-chart-tooltip" style="position: absolute; height: auto; box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.1); z-index: 1000; display: none; border-radius: 5px;"><div style=" width: auto;height: auto;min-width: 50px;line-height: auto;margin: 0px 0px 0px 0px;padding: 5px;font-family: Calibri, Arial, Georgia, serif;font-weight: normal;font-style: italic;font-size: 14px;color: #000000;text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);text-align: left;border: 2px solid gray;background: rgba(255,255,255,.9);text-indent: 0px;white-space: nowrap;border-radius: 5px;-moz-user-select:none;-khtml-user-select: none;-webkit-user-select: none;-ms-user-select: none;user-select: none;} "> Sample Tooltip</div></div><a class="canvasjs-chart-credit" style="outline:none;margin:0px;position:absolute;right:3px;top:486px;color:dimgrey;text-decoration:none;font-size:10px;font-family:Lucida Grande, Lucida Sans Unicode, Arial, sans-serif" tabindex="-1" target="_blank" href="http://canvasjs.com/">CanvasJS.com</a></div></div>
+<div>
+  <button onclick="audioElement.play()">Play the Audio</button>
+  <button onclick="audioElement.pause()">Pause the Audio</button>
+  <button onclick="audioElement.volume+=0.1">Increase Volume</button>
+  <button onclick="audioElement.volume-=0.1">Decrease Volume</button>
+</div>
+<script type="text/javascript">
+(function() {
+	/*
+	Speed has to be bigger then refresh!!!
+	*/
+	
+	//Speed to move from right to left, the visible amount of time on the x axis (in milliseconds)
+	var speed = 20000;
+	
+	//Time in milliseconds to redraw chart
+	var refresh = 40;
+	
+	//Without var to make it a global variable accessable by the html onclick attribute 
+	audioElement = document.getElementById('audioElement');
+	var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+	var audioSrc = audioCtx.createMediaElementSource(audioElement);
+	var analyser = audioCtx.createAnalyser();
+	
+	// Bind our analyser to the media element source.
+	audioSrc.connect(analyser);
+	audioSrc.connect(audioCtx.destination);
+	
+	//Get frequency data (800 = max frequency)
+	var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+	//Use below to show all frequencies
+	//var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+
+	//The animation reference
+	var animation;
+	
+	//Create chart
+	var dps = []; // dataPoints
+	var chart = new CanvasJS.Chart("chart", {
+		interactivityEnabled: false,
+		width: 700,
+		height: 500,
+		axisX: {
+			title: "Time",
+			valueFormatString: "mm:ss"
+		},
+		axisY: {
+			title: "dB"
+		},
+		data: [{
+			type: "line",
+			dataPoints: dps
+		}]
+	});
+	chart.render();
+	
+	//On play
+	audioElement.onplay = function() {
+		//Start drawing
+		animation = setInterval(function() {
+			drawWave();
+		}, refresh);
+	};
+	
+	//On pause
+	audioElement.onpause = function() {
+		//Stop drawing
+		clearInterval(animation);
+	};
+	
+	//On ended
+	audioElement.onended = function() {
+		//Stop drawing
+		clearInterval(animation);
+		
+		//Reset time
+		time = 0;
+		
+		//Reset dataPoints
+		dps = [];
+		
+		//Prevent audio from looping (you can remove this if you want it to loop)
+		audioElement.pause();
+	};
+	
+	//Max dB
+	var max = analyser.maxDecibels;
+	
+	//Min dB
+	var min = analyser.minDecibels;
+	
+	//Time
+	var time = 0;
+	
+	//Our drawing method
+	function drawWave() {
+	
+		// Copy frequency data to frequencyData array.
+		analyser.getByteFrequencyData(frequencyData);
+		
+		//Total loudness of all frequencies in frequencyData
+		var totalLoudness = 0;
+		for(var i = 0; i < frequencyData.length; i++) {
+			totalLoudness += frequencyData[i];
+		}
+		
+		//Average loudness of all frequencies in frequencyData on scale from 0 to 255
+		var averageLoudness = totalLoudness / frequencyData.length / 255;
+		
+		//Decibels
+		var decibels = min + averageLoudness * Math.abs(min - max);
+		
+		//Increase time
+		time += refresh;
+		
+		//Add to chart
+		dps.push({
+			x: new Date(time),
+			y: decibels
+		});
+		
+		//Maximum x values to draw based on speed ad refresh
+		if(dps.length > speed / refresh) {
+			dps.shift();
+		}
+		
+		//Draw new chart
+		chart.render();	
+	}
+})();
+</script><span style="position: absolute; left: 0px; top: -20000px; padding: 0px; margin: 0px; border: medium none; white-space: pre; line-height: normal; font-family: Calibri,Optima,Candara,Verdana,Geneva,sans-serif; font-size: 23px; font-weight: normal; display: none;">Mpgyi</span><span style="position: absolute; left: 0px; top: -20000px; padding: 0px; margin: 0px; border: none; white-space: pre; line-height: normal; font-family: Calibri, Optima, Candara, Verdana, Geneva, sans-serif; font-size: 23px; font-weight: normal; display: none;">Mpgyi</span><span style="position: absolute; left: 0px; top: -20000px; padding: 0px; margin: 0px; border: medium none; white-space: pre; line-height: normal; font-family: Calibri,Optima,Candara,Verdana,Geneva,sans-serif; font-size: 10px; font-weight: normal; display: none;">Mpgyi</span>
+
+</body></html>
