@@ -12,6 +12,6 @@
   <h1> HYPSON </h1>
 
 <ds-widget-clock start-time="startTimeValue"></ds-widget-clock><br>
-<a class="button icon-right ion-chevron-right button-calm">Start</a>
+<a class="button icon-right ion-chevron-right button-positive" ng-class="{'active': isActive}" ng-click="activeButton()" >{{stats}}</a>
   </ion-content>
 </ion-view>
