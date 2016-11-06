@@ -1,5 +1,8 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="HYPSON" class="bgdegrade">
+
   <ion-content class="padding">
+
+
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
     <script src="../lib/angular/angular.min.js"></script>
@@ -7,12 +10,15 @@
 
 <link rel="stylesheet" href="../lib/angular-ui-clock/dist/angular-clock.css">
 <link href='//fonts.googleapis.com/css?family=Syncopate:400,700' rel='stylesheet' type='text/css'>
-<background src="../img/123.jpg">
+<div class="home">
   <center>
-  <h1> HYPSON </h1>
+<br>
 
 <ds-widget-clock start-time="startTimeValue"></ds-widget-clock><br>
-<a class="button icon-right ion-chevron-right button-positive" ng-class="{'active': isActive}" ng-click="activeButton()" >{{stats}}</a>
-<a class="button icon-right ion-chevron-right button-positive" ng-click="play()" >PLAY</a>
+
+<a class="button icon-right ion-chevron-right button-calm" ng-class="{'active': isActive}" ng-click="activeButton()" >{{stats}}</a>
+</div>
+
   </ion-content>
+
 </ion-view>

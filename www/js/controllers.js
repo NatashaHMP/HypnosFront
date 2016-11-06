@@ -6,6 +6,7 @@ angular.module('starter.controllers', [])
     $http({
       method: 'GET',
       url: "http://hypnosbluehack.mybluemix.net/test/?text=Breathing%20pauses;%20Awakenings%20from%20sleep;%20Morning%20headache",
+      header:  
     }).then(function(data){
       console.log(data);
       return data;
