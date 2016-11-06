@@ -5,8 +5,8 @@ angular.module('starter.controllers', [])
   $scope.getData = function() {
     $http({
       method: 'GET',
-      url: "http://hypnosbluehack.mybluemix.net/test/?text=Breathing%20pauses;%20Awakenings%20from%20sleep;%20Morning%20headache",
-      header:  
+      url: "http://c0e36a29-9e47-4cb0-a0c8-a3d62e2d0589:t7YT5rumqujq@hypnosbluehack.mybluemix.net/test/?text=Breathing%20pauses;%20Awakenings%20from%20sleep;%20Morning%20headache",
+
     }).then(function(data){
       console.log(data);
       return data;
